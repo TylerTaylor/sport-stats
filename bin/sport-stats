@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require './lib/sport_stats'
+
+SportStats::CLI.new.call
