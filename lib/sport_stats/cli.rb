@@ -4,4 +4,8 @@ class SportStats::CLI
     puts "Sport Stats:"
   end
 
+  def print
+
+  end
+
 end
