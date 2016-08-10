@@ -1,24 +1,25 @@
 class SportStats::CLI
 
   def call
-    puts "Sport Stats: \n"
     list_sports
     menu
   end
 
   def list_sports
+    puts "Sport Stats: \n"
     puts "Which league would you like to view?"
     puts """
       1. NBA
       2. NFL
       3. MLB
     """
-    #@stats = SportStats::Stats.stats
+    @stats = SportStats::Stats.stats
   end
 
   def menu
     input = nil
     while input != "exit"
+      puts "\n"
       puts "Enter the number or name of the league you'd like more info on:"
       input = gets.strip.downcase
       case input
