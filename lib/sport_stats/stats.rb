@@ -1,9 +1,9 @@
 class SportStats::Stats
 
   def self.stats
-    stats = []
+    stats = {}
 
-    stats << self.scrape_nba
+    stats[:nba] = self.scrape_nba
 
     stats
   end
@@ -31,9 +31,9 @@ class SportStats::Stats
 
     team_names.reject! {|x| x.empty? }
 
-    # team stat line
+    # team stat lines
     stat_line = []
-    #temp_array = []
+
     doc.search(".standings-row").each do |col|
       temp_array = []
       col.css("td").each do |x|
@@ -42,7 +42,8 @@ class SportStats::Stats
       stat_line << temp_array
     end
 
-    stat_hash = Hash[team_names.zip(stat_line)]
+    # team_stats {"Team" => ["stats"]}
+    team_stats = Hash[team_names.zip(stat_line)]
   end
 
 end
