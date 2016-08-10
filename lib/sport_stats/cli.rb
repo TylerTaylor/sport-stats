@@ -13,6 +13,7 @@ class SportStats::CLI
       2. NFL
       3. MLB
     """
+    #@stats = SportStats::Stats.stats
   end
 
   def menu
