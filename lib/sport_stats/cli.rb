@@ -26,6 +26,7 @@ class SportStats::CLI
       when "1"
         puts "More info on the NBA..."
         SportStats::Stats.display_stats("nba")
+        submenu
       when "2"
         puts "More info on the NFL..."
         SportStats::Stats.display_stats("nfl")
@@ -37,6 +38,15 @@ class SportStats::CLI
       else
         puts "I don't recognize that command. Please type list or exit."
       end
+    end
+  end
+
+  def submenu
+    puts "If you want the stats for a specific team only, enter the number next to the team name."
+    input = gets.strip.downcase
+    case input
+    when "1"
+      SportStats::Stats.find("1")
     end
   end
 

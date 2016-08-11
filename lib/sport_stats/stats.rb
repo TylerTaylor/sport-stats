@@ -40,7 +40,7 @@ class SportStats::Stats
     end
 
     team_names.reject! {|x| x.empty? }
-
+    
     # team stat lines
     stat_line = []
 
@@ -56,11 +56,22 @@ class SportStats::Stats
     team_stats = Hash[team_names.zip(stat_line)]
   end
 
+  def self.find(id)
+    binding.pry
+  end
+
+  def self.print_categories
+    print "Team:\t\t\t\t"
+    @category_line.each {|cat| print cat + "     "}
+    puts "\n"
+  end
+
   def self.display_stats(input)
     case input
     when "nba"
       # print categories here
-      binding.pry
+      print_categories
+
       self.stats[:nba].each.with_index(1) do |(k, v), index|
         puts "#{index}. #{k} -     #{v.join("     ")}"
       end
