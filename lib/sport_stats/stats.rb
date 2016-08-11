@@ -8,7 +8,6 @@ class SportStats::Stats
     elsif input == "mlb"
       @doc = Nokogiri::HTML(open("http://www.espn.com/mlb/standings/_/group/overall"))
     end
-
   end
 
   def self.stats
@@ -24,11 +23,11 @@ class SportStats::Stats
     #binding.pry
 
     # category_line
-    category_line = []
+    @category_line = []
     doc.search("th span.tooltip").each do |category|
-      category_line << category.text
+      @category_line << category.text
     end
-    category_line.uniq!
+    @category_line.uniq!
 
     # category_line.each do |category|
     #   print category + "   "
@@ -61,16 +60,16 @@ class SportStats::Stats
     case input
     when "nba"
       # print categories here
-      self.stats[:nba].each do |k, v|
-        puts "#{k} - #{v}"
+      self.stats[:nba].each.with_index(1) do |(k, v), index|
+        puts "#{index}. #{k} - #{v}"
       end
     when "nfl"
-      self.stats[:nfl].each do |k, v|
-        puts "#{k} - #{v}"
+      self.stats[:nfl].each.with_index(1) do |(k, v), index|
+        puts "#{index}. #{k} - #{v}"
       end
     when "mlb"
-      self.stats[:mlb].each do |k, v|
-        puts "#{k} - #{v}"
+      self.stats[:mlb].each.with_index(1) do |(k, v), index|
+        puts "#{index}. #{k} - #{v}"
       end
     end
   end
