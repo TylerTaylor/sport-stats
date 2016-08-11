@@ -25,10 +25,13 @@ class SportStats::CLI
       case input
       when "1"
         puts "More info on the NBA..."
+        SportStats::Stats.display_stats("nba")
       when "2"
         puts "More info on the NFL..."
+        SportStats::Stats.display_stats("nfl")
       when "3"
         puts "More info on MLB..."
+        SportStats::Stats.display_stats("mlb")
       when "list"
         list_sports
       else
