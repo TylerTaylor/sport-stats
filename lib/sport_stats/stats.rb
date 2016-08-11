@@ -60,16 +60,17 @@ class SportStats::Stats
     case input
     when "nba"
       # print categories here
+      binding.pry
       self.stats[:nba].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} - #{v}"
+        puts "#{index}. #{k} -     #{v.join("     ")}"
       end
     when "nfl"
       self.stats[:nfl].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} - #{v}"
+        puts "#{index}. #{k} -     #{v.join("     ")}"
       end
     when "mlb"
       self.stats[:mlb].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} - #{v}"
+        puts "#{index}. #{k} -     #{v.join("     ")}"
       end
     end
   end
