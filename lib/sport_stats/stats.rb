@@ -1,5 +1,7 @@
 class SportStats::Stats
 
+  @all = []
+
   def self.get_page(input)
     if input == "nba"
       @doc = Nokogiri::HTML(open("http://www.espn.com/nba/standings/_/group/league"))
@@ -29,10 +31,6 @@ class SportStats::Stats
     end
     @category_line.uniq!
 
-    # category_line.each do |category|
-    #   print category + "   "
-    # end
-
     # team names, not sure if this is the best way to go about this
     team_names = []
     doc.search(".standings-row td").each do |x|
@@ -40,7 +38,8 @@ class SportStats::Stats
     end
 
     team_names.reject! {|x| x.empty? }
-    
+    @all << team_names
+
     # team stat lines
     stat_line = []
 
@@ -56,8 +55,12 @@ class SportStats::Stats
     team_stats = Hash[team_names.zip(stat_line)]
   end
 
-  def self.find(id)
-    binding.pry
+  def self.find(league, input)
+    t = stats[league.to_sym].keys[input.to_i-1]
+    s = stats[league.to_sym].values[input.to_i-1]
+
+    print_categories
+    puts "#{t}\t" + s.join("     ")
   end
 
   def self.print_categories
