@@ -100,11 +100,17 @@ class SportStats::Stats
     t = stats[league.to_sym].keys[input.to_i-1]
     s = stats[league.to_sym].values[input.to_i-1]
 
-    print_categories
+    print_all_categories
     puts "#{t}\t" + s.join("     ")
   end
 
-  def self.print_categories
+  def self.print_three_categories
+    print "Team:\t\t\t\t "
+    @category_line[0..2].each {|cat| print cat + "     "}
+    puts "\n"
+  end
+
+  def self.print_all_categories
     print "Team:\t\t\t\t "
     @category_line.each {|cat| print cat + "     "}
     puts "\n"
@@ -114,18 +120,18 @@ class SportStats::Stats
     case input
     when "nba"
       # print categories here
-      print_categories
+      print_three_categories
 
       self.stats[:nba].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -   #{v.join("    ")}"
+        puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
       end
     when "nfl"
       self.stats[:nfl].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -   #{v.join("    ")}"
+        puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
       end
     when "mlb"
       self.stats[:mlb].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -   #{v.join("    ")}"
+        puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
       end
     end
   end
