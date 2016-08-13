@@ -46,9 +46,16 @@ class SportStats::Stats
     stats
   end
 
-  def self.format_list(input)
-
-    puts "DID WE MAKE IT HERE?"
+  def self.format_team_names
+    longest = @team_names.max_by(&:length).length
+    @team_names.each.with_index(1) do |team_name, index|
+      space = longest - team_name.length
+      if index < 10
+        team_name << " " * space + "  "
+      else
+        team_name << " " * space + " "
+      end
+    end
   end
 
   def self.scrape(doc)
@@ -60,26 +67,16 @@ class SportStats::Stats
     @category_line.uniq!
 
     # team names, not sure if this is the best way to go about this
-    team_names = []
+    @team_names = []
     doc.search(".standings-row td").each do |x|
-      team_names << x.css("span.team-names").text
+      @team_names << x.css("span.team-names").text
     end
 
-    team_names.reject! {|x| x.empty? }
+    @team_names.reject! {|x| x.empty? }
 
-    longest = team_names.max_by(&:length).length
-    team_names.each.with_index(1) do |team_name, index|
-      space = longest - team_name.length
-      if index < 10
-        team_name << " " * space + "  "
-      else
-        team_name << " " * space + " "
-      end
-    end
+    self.format_team_names
 
-    @all << team_names
-
-
+    @all << @team_names
 
     # team stat lines
     stat_line = []
@@ -93,12 +90,18 @@ class SportStats::Stats
     end
 
     # team_stats {"Team" => ["stats"]}
-    team_stats = Hash[team_names.zip(stat_line)]
+    team_stats = Hash[@team_names.zip(stat_line)]
+  end
+
+  def self.scrape_roster
+
   end
 
   def self.find(league, input)
     t = stats[league.to_sym].keys[input.to_i-1]
     s = stats[league.to_sym].values[input.to_i-1]
+
+    binding.pry
 
     print_all_categories
     puts "#{t}\t" + s.join("     ")
