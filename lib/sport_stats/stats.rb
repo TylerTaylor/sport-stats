@@ -18,12 +18,40 @@ class SportStats::Stats
     stats[:nfl] = self.scrape(get_page("nfl"))
     stats[:mlb] = self.scrape(get_page("mlb"))
     stats
+
+    # formatted_stats = {}
+    # stats.dup.each do |key, value|
+    #   # for each League, find the longest team name
+    #   longest = stats[key].keys.max_by(&:length).length
+    #   stats[key].keys.each do |team_name|
+    #     # key = key.dup
+    #     space = longest - team_name.length
+    #     team_name += " " * space + " "
+    #     # key << " " * space + " "
+    #     binding.pry
+    #   end
+    #   stats
+    # end
+
+    
+    # longest = stats[:nba].keys.max_by(&:length).length
+    #longest = @all[0].max_by(&:length).length
+
+    # stats[input.to_sym].keys.each do |key|
+    #   space = longest - key.length
+    #   key << " " * space + " "
+    #   binding.pry
+    # end
+    #binding.pry
+    stats
+  end
+
+  def self.format_list(input)
+
+    puts "DID WE MAKE IT HERE?"
   end
 
   def self.scrape(doc)
-    #doc = Nokogiri::HTML(open("http://www.espn.com/nba/standings/_/group/league"))
-    #binding.pry
-
     # category_line
     @category_line = []
     doc.search("th span.tooltip").each do |category|
@@ -38,7 +66,20 @@ class SportStats::Stats
     end
 
     team_names.reject! {|x| x.empty? }
+
+    longest = team_names.max_by(&:length).length
+    team_names.each.with_index(1) do |team_name, index|
+      space = longest - team_name.length
+      if index < 10
+        team_name << " " * space + "  "
+      else
+        team_name << " " * space + " "
+      end
+    end
+
     @all << team_names
+
+
 
     # team stat lines
     stat_line = []
@@ -64,7 +105,7 @@ class SportStats::Stats
   end
 
   def self.print_categories
-    print "Team:\t\t\t\t"
+    print "Team:\t\t\t\t "
     @category_line.each {|cat| print cat + "     "}
     puts "\n"
   end
@@ -76,15 +117,15 @@ class SportStats::Stats
       print_categories
 
       self.stats[:nba].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -     #{v.join("     ")}"
+        puts "#{index}. #{k} -   #{v.join("    ")}"
       end
     when "nfl"
       self.stats[:nfl].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -     #{v.join("     ")}"
+        puts "#{index}. #{k} -   #{v.join("    ")}"
       end
     when "mlb"
       self.stats[:mlb].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -     #{v.join("     ")}"
+        puts "#{index}. #{k} -   #{v.join("    ")}"
       end
     end
   end

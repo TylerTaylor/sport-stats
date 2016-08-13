@@ -30,9 +30,11 @@ class SportStats::CLI
       when "2"
         puts "More info on the NFL..."
         SportStats::Stats.display_stats("nfl")
+        submenu("nfl")
       when "3"
         puts "More info on MLB..."
         SportStats::Stats.display_stats("mlb")
+        submenu("nfl")
       when "list"
         list_sports
       else
