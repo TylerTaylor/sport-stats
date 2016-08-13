@@ -44,10 +44,15 @@ class SportStats::CLI
   end
 
   def submenu(league)
-    puts "If you want the stats for a specific team only, enter the number next to the team name."
-    input = gets.strip.downcase
-
-    SportStats::Stats.find(league, input)
+    input = ""
+    while input != "q"
+      puts "\nIf you want the stats for a specific team only, enter the number next to the team name. Type 'q' to return to the main menu."
+      input = gets.strip.downcase
+      if input.to_i.to_s == input
+        binding.pry
+        SportStats::Stats.find(league, input)
+      end
+    end
   end
 
 end

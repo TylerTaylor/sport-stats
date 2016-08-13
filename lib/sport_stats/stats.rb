@@ -18,32 +18,6 @@ class SportStats::Stats
     stats[:nfl] = self.scrape(get_page("nfl"))
     stats[:mlb] = self.scrape(get_page("mlb"))
     stats
-
-    # formatted_stats = {}
-    # stats.dup.each do |key, value|
-    #   # for each League, find the longest team name
-    #   longest = stats[key].keys.max_by(&:length).length
-    #   stats[key].keys.each do |team_name|
-    #     # key = key.dup
-    #     space = longest - team_name.length
-    #     team_name += " " * space + " "
-    #     # key << " " * space + " "
-    #     binding.pry
-    #   end
-    #   stats
-    # end
-
-    
-    # longest = stats[:nba].keys.max_by(&:length).length
-    #longest = @all[0].max_by(&:length).length
-
-    # stats[input.to_sym].keys.each do |key|
-    #   space = longest - key.length
-    #   key << " " * space + " "
-    #   binding.pry
-    # end
-    #binding.pry
-    stats
   end
 
   def self.format_team_names
@@ -71,22 +45,18 @@ class SportStats::Stats
     doc.search(".standings-row td").each do |x|
       @team_names << x.css("span.team-names").text
     end
-
     @team_names.reject! {|x| x.empty? }
-
     self.format_team_names
-
     @all << @team_names
 
     # team stat lines
     stat_line = []
-
     doc.search(".standings-row").each do |col|
-      temp_array = []
+      team_stat_line = []
       col.css("td").each do |x|
-        temp_array << x.text if x.text.length < 5
+        team_stat_line << x.text if x.text.length < 5 # Don't grab the team names
       end
-      stat_line << temp_array
+      stat_line << team_stat_line
     end
 
     # team_stats {"Team" => ["stats"]}
@@ -100,8 +70,6 @@ class SportStats::Stats
   def self.find(league, input)
     t = stats[league.to_sym].keys[input.to_i-1]
     s = stats[league.to_sym].values[input.to_i-1]
-
-    binding.pry
 
     print_all_categories
     puts "#{t}\t" + s.join("     ")
