@@ -20,7 +20,7 @@ class SportStats::CLI
     input = nil
     while input != "exit"
       puts "\n"
-      puts "Enter the number or name of the league you'd like more info on:"
+      puts "Enter the number or name of the league you'd like more info on, or type 'exit' to exit:"
       input = gets.strip.downcase
       case input
       when "1"
@@ -34,13 +34,12 @@ class SportStats::CLI
       when "3"
         puts "More info on MLB..."
         SportStats::Stats.display_stats("mlb")
-        submenu("nfl")
+        submenu("mlb")
       when "list"
         list_sports
-      else
-        puts "I don't recognize that command. Please type list or exit."
       end
     end
+    puts "\nThanks for using Sport-Stats"
   end
 
   def submenu(league)
@@ -49,7 +48,6 @@ class SportStats::CLI
       puts "\nIf you want the stats for a specific team only, enter the number next to the team name. Type 'q' to return to the main menu."
       input = gets.strip.downcase
       if input.to_i.to_s == input
-        binding.pry
         SportStats::Stats.find(league, input)
       end
     end

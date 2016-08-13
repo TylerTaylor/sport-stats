@@ -90,17 +90,17 @@ class SportStats::Stats
   def self.display_stats(input)
     case input
     when "nba"
-      # print categories here
       print_three_categories
-
       self.stats[:nba].each.with_index(1) do |(k, v), index|
         puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
       end
     when "nfl"
+      print_three_categories
       self.stats[:nfl].each.with_index(1) do |(k, v), index|
         puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
       end
     when "mlb"
+      print_three_categories
       self.stats[:mlb].each.with_index(1) do |(k, v), index|
         puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
       end
