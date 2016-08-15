@@ -62,7 +62,7 @@ class SportStats::Stats
     doc.search(".standings-row").each do |col|
       team_stat_line = []
       col.css("td").each do |x|
-        team_stat_line << x.text if x.text.length < 5 # Don't grab the team names
+        team_stat_line << x.text if x.text.length <= 5 # Don't grab the team names
       end
       stat_line << team_stat_line
     end
@@ -100,12 +100,13 @@ class SportStats::Stats
 
   def self.print_roster(input, doc)
     self.scrape_roster(input, doc) # scrape_roster returns @players with a hash of their info
+    
+    puts "---------------"
+    print @players[0].keys[0..1].join("\t") + "\n"
+    puts "---------------"
+
     @players.each do |player|
-      if player.values[0].length < 2
-        puts player.values[0] + "  #{player["name"]}"
-      else
-        puts player.values[0] + " #{player["name"]}"
-      end
+      puts player.values[0] + "\t#{player["name"]}"
     end
   end
 
@@ -113,8 +114,8 @@ class SportStats::Stats
     t = stats[league.to_sym].keys[input.to_i-1]
     s = stats[league.to_sym].values[input.to_i-1]
 
-    print_all_categories
-    puts "#{t}\t" + s.join("     ")
+    print_six_categories(t)
+    puts "#{t} " + s[0..5].join("    ")
 
     self.print_roster(t.strip, get_page(league))
   end
@@ -125,9 +126,16 @@ class SportStats::Stats
     puts "\n"
   end
 
-  def self.print_all_categories
-    print "Team:\t\t\t\t "
-    @category_line.each {|cat| print cat + "     "}
+  def self.print_six_categories(input)
+    print "Team:" + " " * (input.length-3)
+
+    @category_line[0..5].each do |cat| #{|cat| print cat + "     "}
+      if cat.length < 3
+        print cat + "    "
+      else
+        print cat + "    "
+      end
+    end
     puts "\n"
   end
 
