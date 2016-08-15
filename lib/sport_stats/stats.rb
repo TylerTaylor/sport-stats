@@ -1,7 +1,5 @@
 class SportStats::Stats
 
-  @all = []
-
   def self.get_page(input)
     if input == "nba"
       @doc = Nokogiri::HTML(open("http://www.espn.com/nba/standings/_/group/league"))
@@ -36,8 +34,10 @@ class SportStats::Stats
     end
   end
 
-  def self.format_player_names
-
+  def self.make_teams
+    @team_stats.each do |team|
+      SportStats::Team.new(team)
+    end
   end
 
   def self.scrape(doc)
@@ -55,7 +55,7 @@ class SportStats::Stats
     end
     @team_names.reject! {|x| x.empty? }
     self.format_team_names
-    @all << @team_names
+    #@all << @team_names
 
     # team stat lines
     stat_line = []
@@ -68,7 +68,10 @@ class SportStats::Stats
     end
 
     # team_stats {"Team" => ["stats"]}
-    team_stats = Hash[@team_names.zip(stat_line)]
+    @team_stats = Hash[@team_names.zip(stat_line)]
+    #SportStats::Team.new(@team_stats)
+    make_teams
+    binding.pry
   end
 
   def self.scrape_roster(input, doc)
