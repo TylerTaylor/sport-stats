@@ -49,6 +49,7 @@ class SportStats::CLI
       input = gets.strip.downcase
       if input.to_i.to_s == input
         SportStats::Stats.find(league, input)
+        #SportStats::Stats.scrape_roster(input)
       end
     end
   end

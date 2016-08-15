@@ -20,6 +20,10 @@ class SportStats::Stats
     stats
   end
 
+  def self.roster
+    roster = {}
+  end
+
   def self.format_team_names
     longest = @team_names.max_by(&:length).length
     @team_names.each.with_index(1) do |team_name, index|
@@ -30,6 +34,10 @@ class SportStats::Stats
         team_name << " " * space + " "
       end
     end
+  end
+
+  def self.format_player_names
+
   end
 
   def self.scrape(doc)
@@ -63,8 +71,42 @@ class SportStats::Stats
     team_stats = Hash[@team_names.zip(stat_line)]
   end
 
-  def self.scrape_roster
+  def self.scrape_roster(input, doc)
+    doc.search(".standings-row td").each do |x|
+      if input == x.css("span.team-names").text
+        team_page_link = "http://espn.com#{x.search('a').attr('href').value}"
+        
+        team_page = Nokogiri::HTML(open(team_page_link)) 
+        
+        @players = []
+        team_page.css("span.link-text").each do |text|
+          if text.text == "Roster"
+            link = Nokogiri::HTML(open(text.parent.attr('href')))
+            link.css('tr.evenrow, tr.oddrow').each do |word|
+              categories = ["no.", "name", "pos", "age", "height", "weight", "college", "salary"]
+              player_info = []
+              word.children.each do |word|
+                player_info << word.text
+              end
 
+              @player_line = Hash[categories.zip(player_info)]
+              @players << @player_line
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def self.print_roster(input, doc)
+    self.scrape_roster(input, doc) # scrape_roster returns @players with a hash of their info
+    @players.each do |player|
+      if player.values[0].length < 2
+        puts player.values[0] + "  #{player["name"]}"
+      else
+        puts player.values[0] + " #{player["name"]}"
+      end
+    end
   end
 
   def self.find(league, input)
@@ -73,6 +115,8 @@ class SportStats::Stats
 
     print_all_categories
     puts "#{t}\t" + s.join("     ")
+
+    self.print_roster(t.strip, get_page(league))
   end
 
   def self.print_three_categories
