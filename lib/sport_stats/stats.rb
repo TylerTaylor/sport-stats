@@ -24,6 +24,7 @@ class SportStats::Stats
   end
 
   def self.make_teams(league)
+    SportStats::Team.all.clear
     stats[league.to_sym].each do |team|
       SportStats::Team.new(team)
     end
@@ -166,6 +167,8 @@ class SportStats::Stats
     team = stats[league.to_sym].keys[input.to_i-1]
     self.make_players(team, get_page(league))
     self.print_roster
+    SportStats::Team.all.clear
+    SportStats::Player.all.clear
   end
 
   def self.display_stats
