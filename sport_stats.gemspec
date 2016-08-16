@@ -25,5 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "nokogiri", ">= 0"
   spec.add_development_dependency "pry", ">= 0"
 
-  spec.add_dependency "nokogiri", ">= 0"
+  #spec.add_dependency "nokogiri", ">= 0"
+  spec.add_development_dependency 'command_line_reporter', '>=3.0'
 end

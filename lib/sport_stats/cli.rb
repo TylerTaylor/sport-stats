@@ -25,15 +25,19 @@ class SportStats::CLI
       case input
       when "1"
         puts "More info on the NBA..."
-        SportStats::Stats.display_stats("nba")
+        SportStats::Stats.make_teams("nba")
+        SportStats::Stats.display_stats
+        #binding.pry
         submenu("nba")
       when "2"
         puts "More info on the NFL..."
-        SportStats::Stats.display_stats("nfl")
+        SportStats::Stats.make_teams("nfl")
+        SportStats::Stats.display_stats
         submenu("nfl")
       when "3"
         puts "More info on MLB..."
-        SportStats::Stats.display_stats("mlb")
+        SportStats::Stats.make_teams("mlb")
+        SportStats::Stats.display_stats
         submenu("mlb")
       when "list"
         list_sports

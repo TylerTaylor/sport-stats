@@ -1,4 +1,5 @@
 class SportStats::Stats
+  extend CommandLineReporter
 
   def self.get_page(input)
     if input == "nba"
@@ -34,8 +35,8 @@ class SportStats::Stats
     end
   end
 
-  def self.make_teams
-    @team_stats.each do |team|
+  def self.make_teams(league)
+    stats[league.to_sym].each do |team|
       SportStats::Team.new(team)
     end
   end
@@ -70,8 +71,8 @@ class SportStats::Stats
     # team_stats {"Team" => ["stats"]}
     @team_stats = Hash[@team_names.zip(stat_line)]
     #SportStats::Team.new(@team_stats)
-    make_teams
-    binding.pry
+    #make_teams
+    #binding.pry
   end
 
   def self.scrape_roster(input, doc)
@@ -142,22 +143,41 @@ class SportStats::Stats
     puts "\n"
   end
 
-  def self.display_stats(input)
-    case input
-    when "nba"
-      print_three_categories
-      self.stats[:nba].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
+  def self.display_stats
+    table(:border => true) do
+      row do
+        column('Team', :width => 25)
+        column('W', :width => 4)
+        column('L', :width => 4)
+        column('PCT', :width => 4)
+        column('GB', :width => 4)
+        column('HOME', :width => 4)
+        column('ROAD', :width => 4)
+        column('DIV', :width => 4)
+        column('CONF', :width => 4)
+        column('PPG', :width => 4)
+        column('OPP PPG', :width => 4)
+        column('DIFF', :width => 4)
+        column('STRK', :width => 4)
+        column('LAST 10', :width => 4)
       end
-    when "nfl"
-      print_three_categories
-      self.stats[:nfl].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
-      end
-    when "mlb"
-      print_three_categories
-      self.stats[:mlb].each.with_index(1) do |(k, v), index|
-        puts "#{index}. #{k} -   #{v[0..2].join("    ")}"
+      SportStats::Team.all.each do |team|
+        row do
+          column(team.name)
+          column(team.wins)
+          column(team.losses)
+          column(team.pct)
+          column(team.gb)
+          column(team.home)
+          column(team.road)
+          column(team.div)
+          column(team.conf)
+          column(team.ppg)
+          column(team.opp_ppg)
+          column(team.diff)
+          column(team.strk)
+          column(team.l10)
+        end
       end
     end
   end
