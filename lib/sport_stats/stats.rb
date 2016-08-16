@@ -117,8 +117,9 @@ class SportStats::Stats
     table(:border => true) do
       row do
         titles.each do |title|
-          if title == "NAME" || title == "COLLEGE" || title == "BIRTH_PLACE"
-            column(title, :width => 25)
+          if title == "NAME" || title == "COLLEGE" || title == "BIRTH_PLACE" ||
+            title == "SALARY"
+            column(title, :width => 20)
           else
             column(title, :width => 6)
           end
@@ -167,7 +168,6 @@ class SportStats::Stats
     team = stats[league.to_sym].keys[input.to_i-1]
     self.make_players(team, get_page(league))
     self.print_roster
-    SportStats::Team.all.clear
     SportStats::Player.all.clear
   end
 
@@ -176,19 +176,19 @@ class SportStats::Stats
       row do
         column('', :width => 2, :align => 'left')
         column('Team', :width => 25)
-        column('W', :width => 4)
-        column('L', :width => 4)
-        column('PCT', :width => 4)
-        column('GB', :width => 4)
-        column('HOME', :width => 4)
-        column('ROAD', :width => 4)
-        column('DIV', :width => 4)
-        column('CONF', :width => 4)
-        column('PPG', :width => 4)
-        column('OPP PPG', :width => 4)
-        column('DIFF', :width => 4)
-        column('STRK', :width => 4)
-        column('LAST 10', :width => 4)
+        column('W', :width => 5)
+        column('L', :width => 5)
+        column('PCT', :width => 5)
+        column('GB', :width => 5)
+        column('HOME', :width => 5)
+        column('ROAD', :width => 5)
+        column('DIV', :width => 5)
+        column('CONF', :width => 5)
+        column('PPG', :width => 5)
+        column('OPP PPG', :width => 5)
+        column('DIFF', :width => 5)
+        column('STRK', :width => 5)
+        column('LAST 10', :width => 5)
       end
       SportStats::Team.all.each.with_index(1) do |team, index|
         row do
@@ -216,19 +216,19 @@ class SportStats::Stats
     table(:border => true) do
       row do
         column('Team', :width => 25)
-        column('W', :width => 4)
-        column('L', :width => 4)
-        column('PCT', :width => 4)
-        column('GB', :width => 4)
-        column('HOME', :width => 4)
-        column('ROAD', :width => 4)
-        column('DIV', :width => 4)
-        column('CONF', :width => 4)
-        column('PPG', :width => 4)
-        column('OPP PPG', :width => 4)
-        column('DIFF', :width => 4)
-        column('STRK', :width => 4)
-        column('LAST 10', :width => 4)
+        column('W', :width => 5)
+        column('L', :width => 5)
+        column('PCT', :width => 5)
+        column('GB', :width => 5)
+        column('HOME', :width => 5)
+        column('ROAD', :width => 5)
+        column('DIV', :width => 5)
+        column('CONF', :width => 5)
+        column('PPG', :width => 5)
+        column('OPP PPG', :width => 5)
+        column('DIFF', :width => 5)
+        column('STRK', :width => 5)
+        column('LAST 10', :width => 5)
       end
       team = SportStats::Team.all[id]
         row do
