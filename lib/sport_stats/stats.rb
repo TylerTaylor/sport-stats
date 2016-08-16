@@ -23,18 +23,6 @@ class SportStats::Stats
     roster = {}
   end
 
-  def self.format_team_names
-    longest = @team_names.max_by(&:length).length
-    @team_names.each.with_index(1) do |team_name, index|
-      space = longest - team_name.length
-      if index < 10
-        team_name << " " * space + "  "
-      else
-        team_name << " " * space + " "
-      end
-    end
-  end
-
   def self.make_teams(league)
     stats[league.to_sym].each do |team|
       SportStats::Team.new(team)
@@ -55,8 +43,6 @@ class SportStats::Stats
       @team_names << x.css("span.team-names").text
     end
     @team_names.reject! {|x| x.empty? }
-    self.format_team_names
-    #@all << @team_names
 
     # team stat lines
     stat_line = []
@@ -115,35 +101,51 @@ class SportStats::Stats
   end
 
   def self.find(league, input)
-    t = stats[league.to_sym].keys[input.to_i-1]
-    s = stats[league.to_sym].values[input.to_i-1]
-
-    print_six_categories(t)
-    puts "#{t} " + s[0..5].join("    ")
-
-    self.print_roster(t.strip, get_page(league))
-  end
-
-  def self.print_three_categories
-    print "Team:\t\t\t\t "
-    @category_line[0..2].each {|cat| print cat + "     "}
-    puts "\n"
-  end
-
-  def self.print_six_categories(input)
-    print "Team:" + " " * (input.length-3)
-
-    @category_line[0..5].each do |cat| #{|cat| print cat + "     "}
-      if cat.length < 3
-        print cat + "    "
-      else
-        print cat + "    "
-      end
-    end
-    puts "\n"
+    self.display_team(input.to_i-1)
   end
 
   def self.display_stats
+    table(:border => true) do
+      row do
+        column('', :width => 2, :align => 'left')
+        column('Team', :width => 25)
+        column('W', :width => 4)
+        column('L', :width => 4)
+        column('PCT', :width => 4)
+        column('GB', :width => 4)
+        column('HOME', :width => 4)
+        column('ROAD', :width => 4)
+        column('DIV', :width => 4)
+        column('CONF', :width => 4)
+        column('PPG', :width => 4)
+        column('OPP PPG', :width => 4)
+        column('DIFF', :width => 4)
+        column('STRK', :width => 4)
+        column('LAST 10', :width => 4)
+      end
+      SportStats::Team.all.each.with_index(1) do |team, index|
+        row do
+          column("#{index}")
+          column(team.name)
+          column(team.wins)
+          column(team.losses)
+          column(team.pct)
+          column(team.gb)
+          column(team.home)
+          column(team.road)
+          column(team.div)
+          column(team.conf)
+          column(team.ppg)
+          column(team.opp_ppg)
+          column(team.diff)
+          column(team.strk)
+          column(team.l10)
+        end
+      end
+    end
+  end
+
+  def self.display_team(id)
     table(:border => true) do
       row do
         column('Team', :width => 25)
@@ -161,7 +163,7 @@ class SportStats::Stats
         column('STRK', :width => 4)
         column('LAST 10', :width => 4)
       end
-      SportStats::Team.all.each do |team|
+      team = SportStats::Team.all[id]
         row do
           column(team.name)
           column(team.wins)
@@ -178,7 +180,6 @@ class SportStats::Stats
           column(team.strk)
           column(team.l10)
         end
-      end
     end
   end
 
