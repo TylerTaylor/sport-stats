@@ -7,5 +7,6 @@ require_relative "./sport_stats/version"
 require_relative "./sport_stats/cli"
 require_relative "./sport_stats/stats"
 require_relative "./sport_stats/team"
+require_relative "./sport_stats/player"
 
 

@@ -1,6 +1,6 @@
 class SportStats::Team
 
-  attr_accessor :name, :wins, :losses, :pct, :gb, :home, :road, :div, :conf, :ppg, :opp_ppg, :diff, :strk, :l10
+  attr_accessor :name, :wins, :losses, :pct, :gb, :home, :road, :div, :conf, :ppg, :opp_ppg, :diff, :strk, :l10, :players
 
   @@all = []
 

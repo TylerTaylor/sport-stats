@@ -29,6 +29,13 @@ class SportStats::Stats
     end
   end
 
+  def self.make_players(team, doc)
+    self.scrape_roster(team, doc) # scrape_roster returns @players with a hash of their info
+    @players.each do |player|
+      SportStats::Player.new(player)
+    end
+  end
+
   def self.scrape(doc)
     # category_line
     @category_line = []
@@ -72,14 +79,20 @@ class SportStats::Stats
         team_page.css("span.link-text").each do |text|
           if text.text == "Roster"
             link = Nokogiri::HTML(open(text.parent.attr('href')))
+            
+            @categories = []
+            link.search('tr.colhead').first.children.each do |cat|
+              @categories << cat.text
+            end
+
             link.css('tr.evenrow, tr.oddrow').each do |word|
-              categories = ["no.", "name", "pos", "age", "height", "weight", "college", "salary"]
+              #categories = ["no.", "name", "pos", "age", "height", "weight", "college", "salary"]
               player_info = []
               word.children.each do |word|
                 player_info << word.text
               end
 
-              @player_line = Hash[categories.zip(player_info)]
+              @player_line = Hash[@categories.zip(player_info)]
               @players << @player_line
             end
           end
@@ -88,20 +101,71 @@ class SportStats::Stats
     end
   end
 
-  def self.print_roster(input, doc)
-    self.scrape_roster(input, doc) # scrape_roster returns @players with a hash of their info
-    
-    puts "---------------"
-    print @players[0].keys[0..1].join("\t") + "\n"
-    puts "---------------"
+  def self.print_roster
+    obj = SportStats::Player.all.first # grab a player object to get the titles
+    titles = []
+    obj.instance_variables.map do |var|
+      if obj.instance_variable_get(var) != nil
 
-    @players.each do |player|
-      puts player.values[0] + "\t#{player["name"]}"
+        var = var.to_s
+        var[0] = ''
+        titles << var.upcase
+      end
     end
+
+    table(:border => true) do
+      row do
+        titles.each do |title|
+          if title == "NAME" || title == "COLLEGE" || title == "BIRTH_PLACE"
+            column(title, :width => 25)
+          else
+            column(title, :width => 6)
+          end
+        end
+      end
+      SportStats::Player.all.each do |player|
+        row do
+          player.instance_variables.map do |var|
+            if player.instance_variable_get(var) != nil
+              column(player.instance_variable_get(var))
+            end
+          end
+        end
+      end
+    end
+    
+    # table(:border => true) do
+    #   row do
+    #     column('NO.', :width => 3, :align => 'center')
+    #     column('NAME', :width => 25, :align => 'center')
+    #     column('POS', :width => 4, :align => 'center')
+    #     column('AGE', :width => 4, :align => 'center')
+    #     column('HEIGHT', :width => 6, :align => 'center')
+    #     column('WEIGHT', :width => 6, :align => 'center')
+    #     column('COLLEGE', :width => 18, :align => 'center')
+    #     column('SALARY', :width => 14, :align => 'center')
+    #   end
+    #   SportStats::Player.all.each do |player|
+    #     row do
+    #       column(player.no, :align => 'center')
+    #       column(player.name, :align => 'center')
+    #       column(player.pos, :align => 'center')
+    #       column(player.age, :align => 'center')
+    #       column(player.height, :align => 'center')
+    #       column(player.weight, :align => 'center')
+    #       column(player.college, :align => 'center')
+    #       column(player.salary, :align => 'center')
+    #     end
+    #   end
+    # end
   end
 
   def self.find(league, input)
     self.display_team(input.to_i-1)
+
+    team = stats[league.to_sym].keys[input.to_i-1]
+    self.make_players(team, get_page(league))
+    self.print_roster
   end
 
   def self.display_stats
