@@ -1,7 +1,6 @@
 class SportStats::CLI
 
   def call
-    list_sports
     menu
   end
 
@@ -13,21 +12,20 @@ class SportStats::CLI
       2. NFL
       3. MLB
     """
-    @stats = SportStats::Stats.stats
   end
 
   def menu
     input = nil
-    while input != "exit"
+    while input != "q"
       puts "\n"
-      puts "Enter the number or name of the league you'd like more info on, or type 'exit' to exit:"
+      list_sports
+      puts "Enter the number of the league you'd like more info on, or 'q' to exit:"
       input = gets.strip.downcase
       case input
       when "1"
         puts "More info on the NBA..."
         SportStats::Stats.make_teams("nba")
         SportStats::Stats.display_stats
-        #binding.pry
         submenu("nba")
       when "2"
         puts "More info on the NFL..."
@@ -47,13 +45,12 @@ class SportStats::CLI
   end
 
   def submenu(league)
-    input = ""
+    input = nil
     while input != "q"
       puts "\nIf you want the stats for a specific team only, enter the number next to the team name. Type 'q' to return to the main menu."
       input = gets.strip.downcase
       if input.to_i.to_s == input
         SportStats::Stats.find(league, input)
-        #SportStats::Stats.scrape_roster(input)
       end
     end
   end
