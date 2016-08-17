@@ -110,7 +110,7 @@ class SportStats::Stats
       end # end row
       SportStats::Player.all.each do |player|
         row do
-          player.instance_variables.map do |var|
+          player.instance_variables.each do |var|
             if player.instance_variable_get(var) != nil
               column(player.instance_variable_get(var))
             end
